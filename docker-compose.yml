@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  timesheet-app-container1:
+    image: govtechabdul/timesheetapplication2:timesheetImage1
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://34.126.215.86:3306/timesheet
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ***********
+      SERVER_PORT: 9090
+    networks:
+      - custom-network1
+    command: ["sh", "-c", "service mysql start && java -jar /pro/client/target/timesheet-0.0.1-SNAPSHOT.jar --spring.config.location=/pro/client/src/main/resources/application.properties"]
+    ports:
+      - "9090:9090"  # Expose container's 9090 to host's 9090
+networks:
+  custom-network1:
+    driver: bridge

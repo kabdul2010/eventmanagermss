@@ -1,0 +1,392 @@
+openapi: 3.0.0
+info:
+  title: Client API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local Server
+
+paths:
+  /clients:
+    get:
+      summary: Get a list of clients
+      operationId: getClients
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientDTO'
+    post:
+      summary: Create a new client
+      operationId: createClient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDTO'
+      responses:
+        '201':
+          description: Client created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDTO'
+  /clients/{clientId}:
+    get:
+      summary: Get a specific client by ID
+      operationId: getClientById
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDTO'
+    put:
+      summary: Update a specific client by ID
+      operationId: updateClientById
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDTO'
+      responses:
+        '200':
+          description: Client updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDTO'
+    delete:
+      summary: Delete a specific client by ID
+      operationId: deleteClientById
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Client deleted successfully
+
+  /project:
+    post:
+      summary: Create a new project
+      operationId: createProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDTO'
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
+
+  /projects:
+    get:
+      summary: Get a list of projects
+      operationId: getProjects
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDTO'
+  /projects/{projectId}:
+    get:
+      summary: Get a specific project by ID
+      operationId: getProjectById
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
+    put:
+      summary: Update a specific project by ID
+      operationId: updateProjectById
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDTO'
+      responses:
+        '200':
+          description: Project updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
+    delete:
+      summary: Delete a specific project by ID
+      operationId: deleteProjectById
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Project deleted successfully
+
+  /job:
+    post:
+      summary: Create a new job
+      operationId: createJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobDTO'
+      responses:
+        '201':
+          description: Job created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDTO'
+
+  /jobs:
+    get:
+      summary: Get a list of jobs
+      operationId: getJobs
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobDTO'
+  /jobs/{jobId}:
+    get:
+      summary: Get a specific job by ID
+      operationId: getJobById
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDTO'
+    put:
+      summary: Update a specific job by ID
+      operationId: updateJobById
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobDTO'
+      responses:
+        '200':
+          description: Job updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDTO'
+    delete:
+      summary: Delete a specific job by ID
+      operationId: deleteJobById
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Job deleted successfully
+
+components:
+  schemas:
+    ClientDTO:
+      type: object
+      properties:
+        clientId:
+          type: integer
+          format: int64
+        clientName:
+          type: string
+          pattern: "^(?!\\s*$)[^\\s]+$" # Client Name cannot contain spaces
+        currency:
+          type: string
+        emailId:
+          type: string
+          format: email
+        firstName:
+          type: string
+          pattern: "^(?!\\s*$)[^\\s]+$" # First Name cannot contain spaces
+        lastName:
+          type: string
+          pattern: "^(?!\\s*$)[^\\s]+$" # Last Name cannot contain spaces
+        phone:
+          type: string
+        mobile:
+          type: string
+          pattern: "^[0-9]{10}$" # Mobile must be exactly 10 digits
+        streetAddress:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
+        industry:
+          type: string
+        companySize:
+          type: integer
+        description:
+          type: string
+
+    ProjectDTO:
+      type: object
+      properties:
+        projectId:
+          type: integer
+          format: int
+        projectName:
+          type: string
+        clientName:
+          type: string
+        projectCost:
+          type: number
+        projectHead:
+          type: string
+        rph:
+          type: number
+        projectManager:
+          type: string
+        description:
+          type: string
+        projectUsers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectUserDTO'
+
+    ProjectUserDTO:
+      type: object
+      properties:
+        user:
+          type: string
+        department:
+          type: string
+
+    JobDTO:
+      type: object
+      properties:
+        jobId:
+          type: integer
+          format: int
+        jobName:
+          type: string
+        project:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        hours:
+          type: string
+        billableStatus:
+          type: string
+        jobAssignees:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobAssigneeDTO'
+        workItems:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+
+    JobAssigneeDTO:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersDTO'
+        department:
+
+          type: string
+
+    UsersDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        estimatedHours:
+          type: string
+        rph:
+          type: number
