@@ -15,24 +15,24 @@ public interface EventSetupRepository extends JpaRepository<EventSetup, Long> {
 	
 	
 	@Query(value = "SELECT es.*  FROM event_setup es,event_invite ei WHERE  ei.event_id=es.id and ei.user= :user and es.session_status=:sessionStatus", nativeQuery = true)
-	Collection findEventsByUsersss(String user,String sessionStatus);
+	Collection<EventSetup> findEventsByUsersss(String user,String sessionStatus);
 	
 	
 	
 	@Query(value = "SELECT *  FROM event_setup  WHERE session_status = :sessionStatus", nativeQuery = true)
-	Collection findEventsBySessionStatus(String sessionStatus);
+	Collection<EventSetup> findEventsBySessionStatus(String sessionStatus);
 	
 	
 	@Query(value = "SELECT *  FROM event_setup  WHERE organized_by = :organizedBy", nativeQuery = true)
-	Collection findAllActiveUsersNative(String organizedBy);
+	Collection<EventSetup>  findAllActiveUsersNative(String organizedBy);
 	
 	
 	@Query(value = "SELECT *  FROM event_setup  WHERE organized_by = :organizedBy and session_status = :sessionStatus", nativeQuery = true)
-	Collection findAllActiveUsersNative(String organizedBy,String sessionStatus);
+	Collection<EventSetup>  findAllActiveUsersNative(String organizedBy,String sessionStatus);
 	
 	
 	@Query(value = "SELECT *  FROM event_setup  WHERE id = :id", nativeQuery = true)
-	Object findRecordById(Long id);
+	EventSetup findRecordById(Long id);
 	
 	
 	

@@ -30,23 +30,23 @@ public interface EventManageService {
 
 	public EventSetup sendInvite(EventSetup eventSetup);
 
-	public String joinEvent(JoinEventRequest joinEventRequest);
+	
 
 	public EventPlace createEventPlace(EventPlace eventPlace);
 
 	public String proposeEventLocation(LocationProposeRequest locationProposeRequest);
 
-	public List<EventSetup> findAllEventsByUser(String userMail);
+	public Collection<EventSetup> findAllEventsByUser(String userMail);
 
-	public List<EventSetup> findAllDetailEventsByUser(String userMail);
+	public Collection<EventSetup> findAllDetailEventsByUser(String userMail);
 
-	public List<EventSetup> myActiveSessionsByUsers(String userMail);
+	public Collection<EventSetup> myActiveSessionsByUsers(String userMail);
 
-	public List<EventSetup> findEventsBySessionStatus();
+	public Collection<EventSetup> findEventsBySessionStatus();
 
-	public List<EventSetup> findEventsBySessionStatusByUsers(String userEmail);
+	public Collection<EventSetup> findEventsBySessionStatusByUsers(String userEmail);
 
-	public List<EventSetup> findEndEventsBySessionStatusByUsers(String userEmail);
+	public Collection<EventSetup> findEndEventsBySessionStatusByUsers(String userEmail);
 
 	public Collection<EventPlace> findAllPlaces();
 

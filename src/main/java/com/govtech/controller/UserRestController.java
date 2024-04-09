@@ -160,7 +160,7 @@ public class UserRestController {
 		List<EventInviteDto> inviteList = eventSetupRequest.getSessionUsers();
 		eventSetup = eventManageService.createSession(eventSetup, inviteList);
 		log.info("event created :" + eventSetup.getEventname() + " organized by :" + userEmail);
-		List<EventSetup> list = eventManageService.findAllEventsByUser(userEmail);
+		Collection<EventSetup> list = eventManageService.findAllEventsByUser(userEmail);
 		return ResponseEntity.ok(list);
 	}
 
@@ -173,7 +173,7 @@ public class UserRestController {
 	@GetMapping("/eventlist")
 	public ResponseEntity<?> eventlist(@RequestHeader HttpHeaders headers) {
 		String userEmail = getUserEmailFromUserToken(headers.get("Authorization").get(0));
-		List<EventSetup> list = eventManageService.findAllDetailEventsByUser(userEmail);
+		Collection<EventSetup> list = eventManageService.findAllDetailEventsByUser(userEmail);
 		return ResponseEntity.ok(list);
 	}
 
@@ -185,7 +185,7 @@ public class UserRestController {
 	@GetMapping("/myactivesessionlist")
 	public ResponseEntity<?> myActiveSessions(@RequestHeader HttpHeaders headers) {
 		String userEmail = getUserEmailFromUserToken(headers.get("Authorization").get(0));
-		List<EventSetup> list = eventManageService.myActiveSessionsByUsers(userEmail);
+		Collection<EventSetup> list = eventManageService.myActiveSessionsByUsers(userEmail);
 		return ResponseEntity.ok(list);
 	}
 
@@ -196,7 +196,7 @@ public class UserRestController {
 	 */
 	@GetMapping("/activesessionlist")
 	public ResponseEntity<?> activeSessions(@RequestHeader HttpHeaders headers) {
-		List<EventSetup> list = eventManageService.findEventsBySessionStatus();
+		Collection<EventSetup> list = eventManageService.findEventsBySessionStatus();
 		return ResponseEntity.ok(list);
 	}
 
@@ -209,7 +209,7 @@ public class UserRestController {
 	public ResponseEntity<?> mySessions(@RequestHeader HttpHeaders headers) {
 
 		String userEmail = getUserEmailFromUserToken(headers.get("Authorization").get(0));
-		List<EventSetup> list = eventManageService.findEventsBySessionStatusByUsers(userEmail);
+		Collection<EventSetup> list = eventManageService.findEventsBySessionStatusByUsers(userEmail);
 		return ResponseEntity.ok(list);
 	}
 
@@ -221,7 +221,7 @@ public class UserRestController {
 	@GetMapping("/endsessionlist")
 	public ResponseEntity<?> endSessions(@RequestHeader HttpHeaders headers) {
 		String userEmail = getUserEmailFromUserToken(headers.get("Authorization").get(0));
-		List<EventSetup> list = eventManageService.findEndEventsBySessionStatusByUsers(userEmail);
+		Collection<EventSetup> list = eventManageService.findEndEventsBySessionStatusByUsers(userEmail);
 		return ResponseEntity.ok(list);
 	}
 

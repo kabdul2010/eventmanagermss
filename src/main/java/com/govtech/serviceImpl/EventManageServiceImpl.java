@@ -11,10 +11,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.govtech.dtos.EmailDetail;
 import com.govtech.entity.EventDetailSummaryResponse;
 import com.govtech.entity.EventInvite;
 import com.govtech.entity.EventInviteSummary;
-import com.govtech.entity.EventJoinee;
 import com.govtech.entity.EventPlace;
 import com.govtech.entity.EventProposal;
 import com.govtech.entity.EventProposalSummary;
@@ -24,10 +24,8 @@ import com.govtech.entity.User;
 import com.govtech.payload.EventInviteDto;
 import com.govtech.payload.EventInviteListRequest;
 import com.govtech.payload.EventPlaceRequest;
-import com.govtech.payload.JoinEventRequest;
 import com.govtech.payload.LocationProposeRequest;
 import com.govtech.repository.EventInviteRepository;
-import com.govtech.repository.EventJoineeRepository;
 import com.govtech.repository.EventPlaceRepository;
 import com.govtech.repository.EventProposedLocationRepository;
 import com.govtech.repository.EventSetupRepository;
@@ -50,9 +48,6 @@ public class EventManageServiceImpl implements EventManageService {
 	private EventInviteRepository eventInviteRepository;
 
 	@Autowired
-	private EventJoineeRepository eventJoineeRepository;
-
-	@Autowired
 	private EventProposedLocationRepository eventProposedLocationRepository;
 
 	@Autowired
@@ -60,126 +55,52 @@ public class EventManageServiceImpl implements EventManageService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	
+	
+	@Autowired
+	private EmailTriggerService emailTriggerService;
+	
 
 	@Override
-	public List<EventSetup> findAllEventsByUser(String userMail) {
-		Collection<Object[]> records = eventSetupRepository.findAllActiveUsersNative(userMail);
-		System.out.println("records:::" + records);
-
-		List<EventSetup> list = new ArrayList<>();
-		EventSetup e1 = null;
-
-		for (Object[] obj : records) {
-			e1 = new EventSetup();
-			e1.setEventname((String) obj[2]);
-			e1.setDescription((String) obj[2]);
-			list.add(e1);
-
-		}
-		return list;
+	public Collection<EventSetup> findAllEventsByUser(String userMail) {
+		return eventSetupRepository.findAllActiveUsersNative(userMail);
+		
+	
 	}
 
 	@Override
-	public List<EventSetup> findAllDetailEventsByUser(String userMail) {
-		Collection<Object[]> records = eventSetupRepository.findAllActiveUsersNative(userMail);
-		List<EventSetup> list = new ArrayList<>();
-		EventSetup e1 = null;
-
-		for (Object[] obj : records) {
-			e1 = new EventSetup();
-			e1.setEventId((Long) obj[0]);
-			e1.setDateCreated((Date) obj[1]);
-			e1.setEventname((String) obj[2]);
-			e1.setOrganizedBy((String) obj[3]);
-			e1.setDescription((String) obj[5]);
-			list.add(e1);
-
-		}
-		return list;
+	public Collection<EventSetup> findAllDetailEventsByUser(String userMail) {
+		return eventSetupRepository.findAllActiveUsersNative(userMail);
+	
 	}
 
 	@Override
-	public List<EventSetup> myActiveSessionsByUsers(String userMail) {
-		Collection<Object[]> records = eventSetupRepository.findEventsByUsersss(userMail, "OPEN");
+	public Collection<EventSetup> myActiveSessionsByUsers(String userMail) {
+		Collection<EventSetup> records = eventSetupRepository.findEventsByUsersss(userMail, "OPEN");
 
-		List<EventSetup> list = new ArrayList<>();
-		EventSetup e1 = null;
-
-		for (Object[] obj : records) {
-			e1 = new EventSetup();
-			e1.setEventId((Long) obj[0]);
-			e1.setDateCreated((Date) obj[1]);
-			e1.setEventname((String) obj[2]);
-			e1.setOrganizedBy((String) obj[3]);
-			e1.setDescription((String) obj[5]);
-			list.add(e1);
-
-		}
-		return list;
+	
+		return records;
 	}
 
 	@Override
-	public List<EventSetup> findEventsBySessionStatus() {
-		Collection<Object[]> records = eventSetupRepository.findEventsBySessionStatus("OPEN");
+	public Collection<EventSetup> findEventsBySessionStatus() {
+		return  eventSetupRepository.findEventsBySessionStatus("OPEN");
 
-		List<EventSetup> list = new ArrayList<>();
-		EventSetup e1 = null;
 
-		for (Object[] obj : records) {
-			e1 = new EventSetup();
-			e1.setEventId((Long) obj[0]);
-			e1.setDateCreated((Date) obj[1]);
-			e1.setEventname((String) obj[2]);
-			e1.setOrganizedBy((String) obj[3]);
-			e1.setDescription((String) obj[5]);
-			list.add(e1);
-
-		}
-		return list;
 	}
 
 	@Override
-	public List<EventSetup> findEventsBySessionStatusByUsers(String userEmail) {
-		Collection<Object[]> records = eventSetupRepository.findAllActiveUsersNative(userEmail, "OPEN");
+	public Collection<EventSetup> findEventsBySessionStatusByUsers(String userEmail) {
+		return eventSetupRepository.findAllActiveUsersNative(userEmail, "OPEN");
 
-		List<EventSetup> list = new ArrayList<>();
-		EventSetup e1 = null;
-
-		for (Object[] obj : records) {
-			e1 = new EventSetup();
-			e1.setEventId((Long) obj[0]);
-			e1.setDateCreated((Date) obj[1]);
-			e1.setEventname((String) obj[2]);
-			e1.setOrganizedBy((String) obj[3]);
-
-			e1.setDescription((String) obj[5]);
-			list.add(e1);
-
-		}
-		return list;
+	
 	}
 
 	@Override
-	public List<EventSetup> findEndEventsBySessionStatusByUsers(String userEmail) {
-		Collection<Object[]> records = eventSetupRepository.findEventsBySessionStatus("END");
-		System.out.println("records:::" + records);
-
-		List<EventSetup> list = new ArrayList<>();
-		EventSetup e1 = null;
-
-		for (Object[] obj : records) {
-			e1 = new EventSetup();
-			e1.setEventId((Long) obj[0]);
-			e1.setDateCreated((Date) obj[1]);
-			e1.setEventname((String) obj[2]);
-			e1.setOrganizedBy((String) obj[3]);
-			e1.setDescription((String) obj[5]);
-			e1.setRandomSelectedPlace((String) obj[7]);
-
-			list.add(e1);
-
-		}
-		return list;
+	public Collection<EventSetup> findEndEventsBySessionStatusByUsers(String userEmail) {
+		return eventSetupRepository.findEventsBySessionStatus("END");
+		
 	}
 
 	@Override
@@ -190,28 +111,13 @@ public class EventManageServiceImpl implements EventManageService {
 
 	@Override
 	public EventSetup getEventSessionRecord(Long eventId) {
-		Object eventSetupRecord = eventSetupRepository.findRecordById(eventId);
-		Object obj[] = (Object[]) eventSetupRecord;
-		EventSetup e1 = new EventSetup();
-		e1.setEventId((Long) obj[0]);
-		e1.setDateCreated((Date) obj[1]);
-		e1.setEventname((String) obj[2]);
-		e1.setOrganizedBy((String) obj[3]);
-		e1.setDescription((String) obj[5]);
+		EventSetup e1= eventSetupRepository.findRecordById(eventId);
 		return e1;
 	}
 
 	@Override
 	public EventDetailSummaryResponse getEventDetailSummaryRecord(Long eventid) {
-		Object eventSetupRecord = eventSetupRepository.findRecordById(eventid);
-		Object obj[] = (Object[]) eventSetupRecord;
-		EventSetup e1 = new EventSetup();
-		e1.setEventId((Long) obj[0]);
-		e1.setDateCreated((Date) obj[1]);
-		e1.setEventname((String) obj[2]);
-		e1.setOrganizedBy((String) obj[3]);
-		e1.setDescription((String) obj[5]);
-		e1.setRandomSelectedPlace((String) obj[7]);
+		EventSetup e1= eventSetupRepository.findRecordById(eventid);
 		EventDetailSummaryResponse eventDetailSummaryResponse = modelMapper.map(e1, EventDetailSummaryResponse.class);
 		Collection<EventProposal> records = eventProposedLocationRepository.findAllProposalsByEventId(eventid);
 		List<EventProposalSummary> proposals = new ArrayList<>();
@@ -227,17 +133,8 @@ public class EventManageServiceImpl implements EventManageService {
 	@Override
 	public EventDetailSummaryResponse myEventDetailRecord(Long eventid) {
 
-		Object eventSetupRecord = eventSetupRepository.findRecordById(eventid);
+		EventSetup e1= eventSetupRepository.findRecordById(eventid);
 
-		Object obj[] = (Object[]) eventSetupRecord;
-		EventSetup e1 = new EventSetup();
-
-		e1.setEventId((Long) obj[0]);
-		e1.setDateCreated((Date) obj[1]);
-		e1.setEventname((String) obj[2]);
-		e1.setOrganizedBy((String) obj[3]);
-		e1.setDescription((String) obj[5]);
-		e1.setRandomSelectedPlace((String) obj[7]);
 
 		EventDetailSummaryResponse eventDetailSummaryResponse = modelMapper.map(e1, EventDetailSummaryResponse.class);
 		Collection<EventInvite> records = eventInviteRepository.findAllInviteesByEventId(eventid);
@@ -293,7 +190,7 @@ public class EventManageServiceImpl implements EventManageService {
 		eventProposedLocation.setEventSetup(eventSetup);
 		eventProposedLocation.setEventPlace(eventPlace);
 		eventProposedLocation.setEmail(userEmail);
-		Optional<User> user = userRepository.findByUsername(userEmail);
+		Optional<User> user = userRepository.findByEmail(userEmail);
 		eventProposedLocation.setUser(user.get());
 
 		eventProposedLocationRepository.save(eventProposedLocation);
@@ -308,6 +205,21 @@ public class EventManageServiceImpl implements EventManageService {
 		if (!records.isEmpty()) {
 			EventProposal selected = randomPlaceSelection(records);
 			eventSetupRepository.updateEvent("END", selected.getPlaceName(), eventid);
+			
+			
+			List result=eventInviteRepository.findJoinedTeam(eventid);
+			System.out.println("resultttttttttttttttttttt"+result);
+			
+			/*EmailDetail emailDetail=new EmailDetail();
+			
+			emailDetail.setContent("session ID"+eventid+"\nSession Ended and Random Selection "+selected.getPlaceName());
+			emailDetail.setSubject("Session Ended and Random Selection "+selected.getPlaceName());
+			emailDetail.setToAddress(eventInvite.getUser());
+			
+			
+			inviteEmailTrigger(emailDetail);*/
+			
+			
 		} else {
 			eventSetupRepository.updateEvent("END", "", eventid);
 		}
@@ -336,17 +248,10 @@ public class EventManageServiceImpl implements EventManageService {
 		eventProposedLocation.setDateCreated(new Date());
 		eventProposedLocation.setEventSetup(eventSetup);
 		eventProposedLocation.setEmail(locationProposeRequest.getProposeBy());
-		System.out.println("fff" + locationProposeRequest.getProposedLocation() + "<<<<");
-		// Optional<EventPlace> eventPlace =
-		// eventPlaceRepository.findByName(locationProposeRequest.getProposedLocation());
-		// System.out.println("eventPlace>>>>>>>" + eventPlace.isPresent());
-		// eventProposedLocation.setEventPlace(eventPlace.get());
 		Optional<User> user = userRepository.findByUsername(locationProposeRequest.getProposeBy());
 
-		System.out.println("user>>>>>>>" + user.isPresent());
 		eventProposedLocation.setUser(user.get());
-		System.out.println(eventProposedLocation.getEventSetup() + "--->" + eventProposedLocation.getEmail() + "--->"
-				+ eventProposedLocation.getEventPlace());
+
 		eventProposedLocationRepository.save(eventProposedLocation);
 		return null;
 	}
@@ -355,15 +260,6 @@ public class EventManageServiceImpl implements EventManageService {
 	public EventSetup createSession(EventSetup eventSetup) {
 		eventSetup.setSessionStatus("OPEN");
 		eventSetup.setDateCreated(new Date());
-		/*
-		 * System.out.println("eventSetup:::" + eventSetup.getSessionUsers());
-		 * 
-		 * eventSetup.getSessionUsers().forEach(inviteReq -> {
-		 * 
-		 * EventInvite eventInvite = modelMapper.map(inviteReq, EventInvite.class);
-		 * eventInvite.setEventSetup(eventSetup);
-		 * eventInvite.setInviteStatus(INVITE_REQ_SENT); });
-		 */
 		return eventSetupRepository.save(eventSetup);
 	}
 
@@ -371,18 +267,27 @@ public class EventManageServiceImpl implements EventManageService {
 	public EventSetup createSession(EventSetup eventSetup, List<EventInviteDto> inviteList) {
 		eventSetup.setSessionStatus("OPEN");
 		eventSetup.setDateCreated(new Date());
-		System.out.println("eventSetup:::" + inviteList);
+
 		eventSetup = eventSetupRepository.save(eventSetup);
+		EmailDetail emailDetail=new EmailDetail();
 		for (EventInviteDto dto : inviteList) {
 
 			EventInvite eventInvite = modelMapper.map(dto, EventInvite.class);
 			eventInvite.setEventSetup(eventSetup);
 			eventInvite.setInviteStatus(INVITE_REQ_SENT);
 			eventInviteRepository.save(eventInvite);
+			emailDetail.setContent("Hi "+eventInvite.getUser()+"\n"+" "+eventSetup.getOrganizedBy()+" invited to Join session \n Pls click below to Join the Session \n http://localhost:4200/event-location-details/"+eventSetup.getEventId());
+			emailDetail.setSubject("Invite for Session from "+eventSetup.getOrganizedBy());
+			emailDetail.setToAddress(eventInvite.getUser());
+			inviteEmailTrigger(emailDetail);
+			
 		}
 		return eventSetup;
 	}
-
+    private void inviteEmailTrigger(EmailDetail emailDetail) {
+    	emailTriggerService.emailTrigger(emailDetail);
+    }
+	
 	@Override
 	public EventSetup setupEvent(EventSetup eventSetup) {
 		return eventSetupRepository.save(eventSetup);
@@ -398,17 +303,6 @@ public class EventManageServiceImpl implements EventManageService {
 			eventInviteRepository.save(eventInvite);
 		});
 
-	}
-
-	@Override
-	public String joinEvent(JoinEventRequest joinEventRequest) {
-		EventSetup eventSetup = modelMapper.map(joinEventRequest, EventSetup.class);
-		EventJoinee eventJoinee = modelMapper.map(joinEventRequest, EventJoinee.class);
-		eventJoinee.setEventSetup(eventSetup);
-		System.out.println(eventJoinee.getEmail() + "--->" + eventJoinee.getEventSetup().getEventId());
-		eventJoinee.setJoineeStatus(EVENT_JOINED);
-		eventJoineeRepository.save(eventJoinee);
-		return null;
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.govtech.dtos.EmailDetail;
 import com.govtech.entity.ResetRequest;
 import com.govtech.entity.User;
-import com.govtech.exception.UserNotFoundException;
 import com.govtech.exception.InvalidInputException;
+import com.govtech.exception.UserNotFoundException;
 import com.govtech.repository.UserRepository;
-import com.govtech.service.EmailService;
 import com.govtech.service.IUserService;
+import com.govtech.serviceImpl.EmailTriggerService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -33,14 +33,17 @@ public class PasswordController {
     @Autowired
     private IUserService userService;
 
-    @Autowired
-    private EmailService emailService;
+  
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private UserRepository userRepo;
+    
+    
+    @Autowired
+    private EmailTriggerService emailTriggerService;
 
     @PostMapping("/forgot/{email}")
     public ResponseEntity<User> processForgotPasswordForm(@PathVariable("email") String userEmail,
@@ -65,12 +68,16 @@ public class PasswordController {
             userService.saveUser(user);
             String appUrl = request.getScheme() + "://" + request.getServerName();
             
-            SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-            passwordResetEmail.setTo(user.getEmail());
-            passwordResetEmail.setSubject("Password Reset Request");
-            passwordResetEmail.setText("To reset your password, click the link below:\n" + appUrl + ":4200/password-change?token="
+        
+            EmailDetail emailDetail=new EmailDetail();
+            
+            emailDetail.setContent("To reset your password, click the link below:\n" + appUrl + ":4200/password-change?token="
                     + user.getResetToken() + "&email=" + user.getEmail());
-            emailService.sendEmail(passwordResetEmail);
+            emailDetail.setToAddress(user.getEmail());
+            emailDetail.setSubject("Password Reset Request");
+            emailTriggerService.emailTrigger(emailDetail);
+            
+            
             return ResponseEntity.ok(user);
         }
     }

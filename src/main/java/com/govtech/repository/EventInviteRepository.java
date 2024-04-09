@@ -27,6 +27,9 @@ public interface EventInviteRepository extends JpaRepository<EventInvite, Long> 
 	@Query(value = " select i.id,i.user,i.invite_status,i.event_id from event_invite i,event_setup s where s.id=i.event_id and i.event_id=:eventId", nativeQuery = true)
 	List<EventInvite> findAllInviteByEventId(@Param("eventId") Long eventId);
 	
+	@Query(value = "select s.organized_by,i.user,i.event_id from event_invite i,event_setup s where s.id=i.event_id and i.event_id=:eventId and i.invite_status='Joined Session'", nativeQuery = true)
+	List  findJoinedTeam(@Param("eventId") Long eventId);
+	
 	
 	/*
 	@Modifying
